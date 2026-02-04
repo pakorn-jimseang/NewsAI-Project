@@ -39,6 +39,11 @@ def extract_headlines(soup):
         result_list.append(new_item)
     
     return result_list
+
+def politeness_delay(min_seconds=2, max_seconds=5):
+    wait_time = random.uniform(min_seconds, max_seconds)
+    print(f"Waiting for {wait_time:.2f} seconds before next request...")
+    time.sleep(wait_time)
     
 def main():
     url = 'https://www.reuters.com/technology/'
