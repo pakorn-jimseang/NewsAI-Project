@@ -2,6 +2,9 @@
 
 import requests
 from bs4 import BeautifulSoup
+import time
+import random
+import re
 
 def fetch_soup(url, headers):
     response = requests.get(url, headers=headers)
@@ -14,6 +17,28 @@ def fetch_soup(url, headers):
         print("-- Connected Fail --")
         print(f"Status Code: {response.status_code}")
         return None
+    
+def extract_headlines(soup):
+    
+    result_list = []
+    
+    s = soup.find_all('a', 
+                      class_=['text-module__text__0GDob text-module__dark-grey__UFC18 text-module__inherit-font__1P1hv text-module__inherit-size__EyiQW link-module__link__INqxZ link-module__underline_on_hover__YTwYC link-module__inherit-line-height__1vd2c media-story-card-module__heading__xgKcP',
+                              'text-module__text__0GDob text-module__dark-grey__UFC18 text-module__medium__2Rl30 text-module__heading_6__u1KdJ heading-module__base__p-zaD heading-module__heading_6__-zrtS media-story-card-module__headline__ZWaRz'],
+                      attrs={'data-testid': ['Link', 'Heading']}
+                      )
+    
+    print(f"{len(s)} data founded")
+    print("-" * 30)
+    
+    for item in s:
+        title = item.text.strip()
+        link = item.get('href')
+        new_item = {'title': title, 'link': link}
+        
+        result_list.append(new_item)
+    
+    return result_list
     
 def main():
     url = 'https://www.reuters.com/technology/'
@@ -34,25 +59,11 @@ def main():
     
     for item in cleaned_data:
         print(item)
-    
-def extract_headlines(soup):
-    
-    result_list = []
-    
-    s = soup.find_all('a', 
-                      class_=['text-module__text__0GDob text-module__dark-grey__UFC18 text-module__inherit-font__1P1hv text-module__inherit-size__EyiQW link-module__link__INqxZ link-module__underline_on_hover__YTwYC link-module__inherit-line-height__1vd2c media-story-card-module__heading__xgKcP',
-                              'text-module__text__0GDob text-module__dark-grey__UFC18 text-module__medium__2Rl30 text-module__heading_6__u1KdJ heading-module__base__p-zaD heading-module__heading_6__-zrtS media-story-card-module__headline__ZWaRz'],
-                      attrs={'data-testid': ['Link', 'Heading']}
-                      )
-    
-    print(f"{len(s)} data founded")
+        
     print("-" * 30)
     
-    for item in s:
-        data = item.text.strip()
-        result_list.append(data)
-    
-    return result_list
+    content = extract_content(cleaned_data, soup)
+    print(content)
 
 if __name__ == "__main__":
     main()
