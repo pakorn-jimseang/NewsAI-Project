@@ -70,6 +70,19 @@ def extract_content(result_list, soup):
         
     return contentList
 
+def clean_content(contentList):
+    
+    cleanedContentList = []
+    target = ", opens new tab"
+    
+    for item in contentList:
+        cleand = [item.replace(target, "")]
+        cleanedContentList.append(cleand)
+        
+    flat_cleanedContentList = [item[0] for item in cleanedContentList]
+        
+    return flat_cleanedContentList
+
 def politeness_delay(min_seconds=2, max_seconds=5):
     wait_time = random.uniform(min_seconds, max_seconds)
     print(f"Waiting for {wait_time:.2f} seconds before next request...")
@@ -100,6 +113,12 @@ def main():
     newsContent = extract_content(newsHeadline, soup)
     
     for item in newsContent:
+        print(item)
+        print("-" * 30)
+        
+    cleand_newsContent = clean_content(newsContent)
+    
+    for item in cleand_newsContent:
         print(item)
         print("-" * 30)
 
