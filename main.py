@@ -1,5 +1,4 @@
 # main.py
-
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -63,9 +62,6 @@ def extract_content(result_list, soup):
                             # class_='article-body-module__content__bnXL1',
                             attrs={'data-testid': re.compile(r'paragraph-\d+')}
                             )
-        print(f"DEBUG: Found {len(paragraphs)} paragraphs for {readyURL}")
-        if paragraphs:
-            print(f"Sample Raw HTML: {paragraphs[0].prettify()[:100]}")
             
         theArticleText = " ".join([p.text.strip() for p in paragraphs])
         contentList.append(theArticleText)
@@ -94,17 +90,18 @@ def main():
         print("Stopping process due to fetching error.")
         return
     
-    cleaned_data = extract_headlines(soup)
+    newsHeadline = extract_headlines(soup)
     
-    for item in cleaned_data:
+    for item in newsHeadline:
         print(item)
         
     print("-" * 30)
     
-    newsContent = extract_content(cleaned_data, soup)
+    newsContent = extract_content(newsHeadline, soup)
     
     for item in newsContent:
         print(item)
+        print("-" * 30)
 
 if __name__ == "__main__":
     main()
